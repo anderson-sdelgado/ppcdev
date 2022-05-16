@@ -5,13 +5,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once 'Conn.class.php';
+require_once ('../dbutil/Conn.class.php');
 /**
- * Description of ObservacaoDAO
+ * Description of OSDAO
  *
  * @author anderson
  */
-class ObservacaoDAO extends Conn {
+class OSDAO extends Conn {
     //put your code here
     
     /** @var PDOStatement */
@@ -22,14 +22,10 @@ class ObservacaoDAO extends Conn {
 
     public function dados() {
 
-        $select = " SELECT "
-                            . " ID AS \"idObservacao\" "
-                            . " , DESCRICAO AS \"descObservacao\" "
-                    . " FROM "
-                            . " INTERFACE.APONTAPERDAOBSERVACAO "
-                    . " ORDER BY "
-                            . " DESCRICAO "
-                    . " ASC ";
+        $select = " SELECT DISTINCT "
+                . " NRO_OS AS \"nroOS\" "
+                . " FROM "
+                . " INTERFACE.V_OS_AGRICOLA_MANUAL ";
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
@@ -38,6 +34,7 @@ class ObservacaoDAO extends Conn {
         $result = $this->Read->fetchAll();
 
         return $result;
+        
     }
     
 }
