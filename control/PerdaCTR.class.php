@@ -41,6 +41,11 @@ class PerdaCTR {
         $cabecPerdaDAO = new CabecPerdaDAO();
         $idCabecArray = array();
         foreach ($dadosCabec as $cabec) {
+            if ($cabec->tipoColheitaCabec == 1) {
+                $cabec->tipoColheitaCabec = 5;
+            } else {
+                $cabec->tipoColheitaCabec = 6;
+            }
             $v = $cabecPerdaDAO->verifCabec($cabec);
             if ($v == 0) {
                 $idCabec = $cabecPerdaDAO->insCabec($cabec);

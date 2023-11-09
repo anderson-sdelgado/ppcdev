@@ -117,8 +117,6 @@ class AmostraPerdaDAO extends Conn {
                     . "FROM "
                         . "APONTAPERDAAMOSTRA "
                 . " WHERE "
-                    . " IDCEL = " . $amostra->idAmostra
-                . " AND "
                     . " IDCABEC = " . $idCabec;
         
         $this->Conn = parent::getConn();

@@ -14,12 +14,6 @@ require_once('../dbutil/Conn.class.php');
 class CabecPerdaDAO extends Conn {
     
     public function verifCabec($cabec) {
-
-        if ($cabec->tipoColheitaCabec == 1) {
-            $cabec->tipoColheitaCabec = 5;
-        } else {
-            $cabec->tipoColheitaCabec = 6;
-        }
         
         $select = "SELECT "
                         . " COUNT(ID) AS QTDE "
@@ -78,12 +72,6 @@ class CabecPerdaDAO extends Conn {
             $qtdeCab = $qtdeCab + 1;
         }
 
-        if ($cabec->tipoColheitaCabec == 1) {
-            $cabec->tipoColheitaCabec = 5;
-        } else {
-            $cabec->tipoColheitaCabec = 6;
-        }
-        
         $sql = "INSERT INTO APONTAPERDACABECALHO ( "
                 . " ID "
                 . " , TIPO "
