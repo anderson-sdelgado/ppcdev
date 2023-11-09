@@ -23,12 +23,12 @@ class OperadorDAO extends Conn {
     public function dados() {
 
         $select = " SELECT DISTINCT "
-                            . " A.CD AS \"idOperador\" "
-                    . "FROM "
+                            . " A.CD AS \"matricOperador\" "
+                        . "FROM "
                             . " COLAB A "
                             . " , CORR B "
                             . " , REG_DEMIS D "
-                    . "  WHERE "
+                        . "  WHERE "
                             . " A.CORR_ID = B.CORR_ID "
                             . " AND "
                             . " A.CD > 11406 "
@@ -38,7 +38,7 @@ class OperadorDAO extends Conn {
                             . " D.COLAB_ID IS NULL "
                             . " AND "
                             . " A.COLAB_ID = D.COLAB_ID (+) "
-                    . " ORDER BY A.CD ASC";
+                        . " ORDER BY A.CD ASC";
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);

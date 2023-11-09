@@ -5,8 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once('../model/dao/CabecPerdaDAO.class.php');
-require_once('../model/dao/AmostraPerdaDAO.class.php');
+require_once('../model/CabecPerdaDAO.class.php');
+require_once('../model/AmostraPerdaDAO.class.php');
 /**
  * Description of PerdaCTR
  *
@@ -27,7 +27,7 @@ class PerdaCTR {
         $jsonObjCabec = json_decode($cabec);
         $jsonObjAmostra = json_decode($amostra);
 
-        $dadosCabec = $jsonObjCabec->cabecalho;
+        $dadosCabec = $jsonObjCabec->cabec;
         $dadosAmostra = $jsonObjAmostra->amostra;
 
         $ret = $this->salvarCabec($dadosCabec, $dadosAmostra);
@@ -44,20 +44,23 @@ class PerdaCTR {
             $v = $cabecPerdaDAO->verifCabec($cabec);
             if ($v == 0) {
                 $idCabec = $cabecPerdaDAO->insCabec($cabec);
-                $this->salvarAmostra($idCabec, $cabec->id, $dadosAmostra);
-                $idCabecArray[] = array("idCabecPerda" => $cabec->id);
+                $this->salvarAmostra($idCabec, $cabec->idCabec, $dadosAmostra);
             }
+            $idCabecArray[] = array("idCabec" => $cabec->idCabec);
         }
         $dadoCabec = array("cabec"=>$idCabecArray);
         $retCabec = json_encode($dadoCabec);
-        return 'GRAVOU-PERDA_' . $retCabec;
+        return 'GRAVOU-ANALISE_' . $retCabec;
     }
 
     private function salvarAmostra($idCabecBD, $idCabecCel, $dadosAmostra) {
         $amostraPerdaDAO = new AmostraPerdaDAO();
         foreach ($dadosAmostra as $amostra) {
-            if ($idCabecCel == $amostra->idCabecalho) {
-                $amostraPerdaDAO->insAmostra($idCabecBD, $amostra);
+            if ($idCabecCel == $amostra->idCabecAmostra) {
+                $v = $amostraPerdaDAO->verifAmostra($idCabecBD, $amostra);
+                if ($v == 0) {
+                    $amostraPerdaDAO->insAmostra($idCabecBD, $amostra);
+                }
             }
         }
     }

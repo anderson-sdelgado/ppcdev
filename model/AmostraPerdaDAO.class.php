@@ -16,13 +16,13 @@ class AmostraPerdaDAO extends Conn {
     public function verifAmostra($idCabec, $amostra) {
 
         $select = " SELECT "
-                . " COUNT(ID) AS QTDE "
+                    . " COUNT(ID) AS QTDE "
                 . " FROM "
-                . " PRU_PERDA_AMOSTRA "
+                    . " APONTAPERDAAMOSTRA "
                 . " WHERE "
-                . " SEQ = " . $amostra->seqAmostraPerda
+                    . " IDCEL = " . $amostra->idAmostra
                 . " AND "
-                . " CABEC_ID = " . $idCabec;
+                    . " IDCABEC = " . $idCabec;
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
@@ -39,116 +39,67 @@ class AmostraPerdaDAO extends Conn {
     }
     
     public function insAmostra($idCabec, $amostra) {
-        
-        $pedra = 0;
-        $tocoArvore = 0;
-        $plantaDaninha = 0;
-        $formigueiros = 0;
-
-        if ($amostra->obsv != 'null') {
-
-            $dados = '';
-
-            $qtdeObsv = strlen($amostra->obsv);
-
-            for ($i = 0; $i < $qtdeObsv; $i++) {
-
-                $d = $amostra->obsv{$i};
-
-                if (($d != '.') && ($d != ' ')) {
-                    $dados = $dados . $d;
-                }
-
-                if ($dados == 'PEDRA') {
-                    $pedra = 1;
-                    $dados = '';
-                } else if ($dados == 'TOCODEARVORE') {
-                    $tocoArvore = 1;
-                    $dados = '';
-                } else if ($dados == 'PLANTASDANINHAS') {
-                    $plantaDaninha = 1;
-                    $dados = '';
-                } else if ($dados == 'FORMIGUEIROS') {
-                    $formigueiros = 1;
-                    $dados = '';
-                }
-            }
-        }
 
         $tara = '';
-        if ($amostra->tara == 0) {
+        if ($amostra->taraAmostra == 0) {
             $tara = "null";
         } else {
-            $tara = $amostra->tara;
+            $tara = $amostra->taraAmostra;
         }
 
         $tolete = '';
-        if ($amostra->tolete == 0) {
+        if ($amostra->toleteAmostra == 0) {
             $tolete = "null";
         } else {
-            $tolete = ($amostra->tolete - $amostra->tara);
+            $tolete = ($amostra->toleteAmostra - $amostra->taraAmostra);
         }
 
         $canaInteira = '';
-        if ($amostra->canaInteira == 0) {
+        if ($amostra->canaInteiraAmostra == 0) {
             $canaInteira = "null";
         } else {
-            $canaInteira = ($amostra->canaInteira - $amostra->tara);
+            $canaInteira = ($amostra->canaInteiraAmostra - $amostra->taraAmostra);
         }
 
         $toco = '';
-        if ($amostra->toco == 0) {
+        if ($amostra->tocoAmostra == 0) {
             $toco = "null";
         } else {
-            $toco = ($amostra->toco - $amostra->tara);
+            $toco = ($amostra->tocoAmostra - $amostra->taraAmostra);
         }
 
         $pedaco = '';
-        if ($amostra->pedaco == 0) {
+        if ($amostra->pedacoAmostra == 0) {
             $pedaco = "null";
         } else {
-            $pedaco = ($amostra->pedaco - $amostra->tara);
+            $pedaco = ($amostra->pedacoAmostra - $amostra->taraAmostra);
         }
 
         $repique = '';
-        if ($amostra->repique == 0) {
+        if ($amostra->repiqueAmostra == 0) {
             $repique = "null";
         } else {
-            $repique = ($amostra->repique - $amostra->tara);
+            $repique = ($amostra->repiqueAmostra - $amostra->taraAmostra);
         }
 
         $ponteiro = '';
-        if ($amostra->ponteiro == 0) {
+        if ($amostra->ponteiroAmostra == 0) {
             $ponteiro = "null";
         } else {
-            $ponteiro = ($amostra->ponteiro - $amostra->tara);
+            $ponteiro = ($amostra->ponteiroAmostra - $amostra->taraAmostra);
         }
 
         $lascas = '';
-        if ($amostra->lascas == 0) {
+        if ($amostra->lascasAmostra == 0) {
             $lascas = "null";
         } else {
-            $lascas = ($amostra->lascas - $amostra->tara);
+            $lascas = ($amostra->lascasAmostra - $amostra->taraAmostra);
         }
 
-        $soqueiraKg = '';
-        if ($amostra->soqueiraKg == 0) {
-            $soqueiraKg = "null";
-        } else {
-            $soqueiraKg = ($amostra->soqueiraKg - $amostra->tara);
-        }
-
-        $soqueiraNum = '';
-        if ($amostra->soqueiraNum == 0) {
-            $soqueiraNum = "null";
-        } else {
-            $soqueiraNum = $amostra->soqueiraNum;
-        }
-        
         $select = " SELECT "
-                    . "COUNT(*) AS QTDE "
+                        . "COUNT(*) AS QTDE "
                     . "FROM "
-                    . "APONTAPERDAAMOSTRA ";
+                        . "APONTAPERDAAMOSTRA ";
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
@@ -159,6 +110,26 @@ class AmostraPerdaDAO extends Conn {
         foreach ($result as $item) {
             $qtdeItem = $item['QTDE'];
             $qtdeItem = $qtdeItem + 1;
+        }
+        
+        $select = " SELECT "
+                        . "COUNT(*) AS QTDE "
+                    . "FROM "
+                        . "APONTAPERDAAMOSTRA "
+                . " WHERE "
+                    . " IDCEL = " . $amostra->idAmostra
+                . " AND "
+                    . " IDCABEC = " . $idCabec;
+        
+        $this->Conn = parent::getConn();
+        $this->Read = $this->Conn->prepare($select);
+        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
+        $this->Read->execute();
+        $result = $this->Read->fetchAll();
+
+        foreach ($result as $item) {
+            $seqItem = $item['QTDE'];
+            $seqItem = $seqItem + 1;
         }
 
         $sql = "INSERT INTO APONTAPERDAAMOSTRA ( "
@@ -182,7 +153,7 @@ class AmostraPerdaDAO extends Conn {
                 . " ) VALUES( "
                 . " " . $qtdeItem
                 . " , " . $idCabec . " "
-                . " , " . $amostra->num . " "
+                . " , " . $seqItem . " "
                 . " , " . $tara . " "
                 . " , " . $tolete . " "
                 . " , " . $canaInteira . " "
@@ -191,12 +162,12 @@ class AmostraPerdaDAO extends Conn {
                 . " , " . $repique . " "
                 . " , " . $ponteiro . " "
                 . " , " . $lascas . " "
-                . " , " . $soqueiraKg . " "
-                . " , " . $soqueiraNum . " "
-                . " , " . $pedra . " "
-                . " , " . $tocoArvore . " "
-                . " , " . $plantaDaninha . " "
-                . " , " . $formigueiros . " "
+                . " , null "
+                . " , null "
+                . " , " . $amostra->pedraAmostra . " "
+                . " , " . $amostra->tocoArvoreAmostra . " "
+                . " , " . $amostra->plantaDaninhasAmostra . " "
+                . " , " . $amostra->formigueiroAmostra . " "
                 . " )";
 
         $this->Create = $this->Conn->prepare($sql);

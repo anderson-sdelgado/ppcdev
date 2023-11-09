@@ -23,7 +23,7 @@ class ColhedoraDAO extends Conn {
     public function dados() {
 
         $select = " SELECT "
-                            . " NRO AS \"idColhedora\" "
+                            . " NRO AS \"nroColhedora\" "
                     . " FROM "
                             . " USINAS.V_INTEGRA_EQUIPAMENTO "
                     . " WHERE "

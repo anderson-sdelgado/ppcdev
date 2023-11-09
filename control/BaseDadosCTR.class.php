@@ -4,12 +4,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
  */
-require('../model/dao/AuditorDAO.class.php');
-require('../model/dao/ColhedoraDAO.class.php');
-require('../model/dao/ObservacaoDAO.class.php');
-require('../model/dao/OperadorDAO.class.php');
-require('../model/dao/OSDAO.class.php');
-require('../model/dao/TipoAmostradorDAO.class.php');
+require('../control/AtualAplicCTR.class.php');
+require('../model/AuditorDAO.class.php');
+require('../model/ColhedoraDAO.class.php');
+require('../model/OperadorDAO.class.php');
+require('../model/OSDAO.class.php');
+require('../model/TalhaoDAO.class.php');
 /**
  * Description of BaseDadosCTR
  *
@@ -17,69 +17,90 @@ require('../model/dao/TipoAmostradorDAO.class.php');
  */
 class BaseDadosCTR {
 
-    public function dadosAuditor() {
+    public function dadosAuditor($info) {
 
-        $auditorDAO = new AuditorDAO();
+        $atualAplicCTR = new AtualAplicCTR();
+        
+        if($atualAplicCTR->verifToken($info)){
 
-        $dados = array("dados"=>$auditorDAO->dados());
-        $retJson = json_encode($dados);
+            $auditorDAO = new AuditorDAO();
 
-        return $retJson;
+            $dados = array("dados"=>$auditorDAO->dados());
+            $retJson = json_encode($dados);
 
-    }
-    
-    public function dadosColhedora() {
-
-        $colhedoraDAO = new ColhedoraDAO();
-
-        $dados = array("dados"=>$colhedoraDAO->dados());
-        $retJson = json_encode($dados);
-
-        return $retJson;
+            return $retJson;
+        
+        }
 
     }
     
-    public function dadosObservacao() {
+    public function dadosColhedora($info) {
 
-        $observacaoDAO = new ObservacaoDAO();
+        $atualAplicCTR = new AtualAplicCTR();
+        
+        if($atualAplicCTR->verifToken($info)){
 
-        $dados = array("dados"=>$observacaoDAO->dados());
-        $retJson = json_encode($dados);
+            $colhedoraDAO = new ColhedoraDAO();
 
-        return $retJson;
+            $dados = array("dados"=>$colhedoraDAO->dados());
+            $retJson = json_encode($dados);
 
-    }
-    
-    public function dadosOperador() {
-
-        $operadorDAO = new OperadorDAO();
-
-        $dados = array("dados"=>$operadorDAO->dados());
-        $retJson = json_encode($dados);
-
-        return $retJson;
+            return $retJson;
+        
+        }
 
     }
     
-    public function dadosOS() {
+    
+    public function dadosOperador($info) {
 
-        $osDAO = new OSDAO();
+        $atualAplicCTR = new AtualAplicCTR();
+        
+        if($atualAplicCTR->verifToken($info)){
 
-        $dados = array("dados"=>$osDAO->dados());
-        $retJson = json_encode($dados);
+            $operadorDAO = new OperadorDAO();
 
-        return $retJson;
+            $dados = array("dados"=>$operadorDAO->dados());
+            $retJson = json_encode($dados);
+
+            return $retJson;
+        
+        }
 
     }
     
-    public function dadosTipoAmostrador() {
+    public function dadosOS($info) {
 
-        $tipoAmostradorDAO = new TipoAmostradorDAO();
+        $atualAplicCTR = new AtualAplicCTR();
+        
+        if($atualAplicCTR->verifToken($info)){
 
-        $dados = array("dados"=>$tipoAmostradorDAO->dados());
-        $retJson = json_encode($dados);
+            $osDAO = new OSDAO();
 
-        return $retJson;
+            $dados = array("dados"=>$osDAO->dados());
+            $retJson = json_encode($dados);
+
+            return $retJson;
+        
+        }
+
+    }
+    
+        
+    public function dadosTalhao($info) {
+
+        $atualAplicCTR = new AtualAplicCTR();
+        
+        if($atualAplicCTR->verifToken($info)){
+
+            $talhaoDAO = new TalhaoDAO();
+
+            $dados = array("dados"=>$talhaoDAO->dados());
+            $retJson = json_encode($dados);
+
+            return $retJson;
+        
+        }
 
     }
     

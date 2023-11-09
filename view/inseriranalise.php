@@ -7,7 +7,6 @@ require_once('../control/PerdaCTR.class.php');
 if (isset($info)):
 
     $perdaCTR = new PerdaCTR();
-    $perdaCTR->salvarDados($info);
-    echo 'GRAVOU-ANALISE';
+    echo $perdaCTR->salvarDados($info);
     
 endif;

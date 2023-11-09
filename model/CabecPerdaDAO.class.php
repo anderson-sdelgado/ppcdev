@@ -15,35 +15,37 @@ class CabecPerdaDAO extends Conn {
     
     public function verifCabec($cabec) {
 
+        if ($cabec->tipoColheitaCabec == 1) {
+            $cabec->tipoColheitaCabec = 5;
+        } else {
+            $cabec->tipoColheitaCabec = 6;
+        }
+        
         $select = "SELECT "
                         . " COUNT(ID) AS QTDE "
                     . " FROM "
                         . " APONTAPERDACABECALHO "
                     . " WHERE "
-                        . " DATA = TO_DATE('" . $cabec->data . "','DD/MM/YYYY')"
+                        . " DATA = TO_DATE('" . $cabec->dthrCabec . "','DD/MM/YYYY')"
                         . " AND "
-                        . " TIPO = " . $cabec->tipo . " "
+                        . " TIPO = " . $cabec->tipoColheitaCabec . " "
                         . " AND "
-                        . " AUDITOR1 = " . $cabec->auditor1 . " "
+                        . " AUDITOR1 = " . $cabec->matricAuditor1Cabec . " "
                         . " AND "
-                        . " AUDITOR2 = " . $cabec->auditor2 . " "
+                        . " TURNO = " . $cabec->nroTurnoCabec . " "
                         . " AND "
-                        . " AUDITOR3 = " . $cabec->auditor3 . " "
+                        . " SECAO = " . $cabec->codSecaoCabec . " "
                         . " AND "
-                        . " TURNO = " . $cabec->turno . " "
+                        . " TALHAO = " . $cabec->nroTalhaoCabec . " "
                         . " AND "
-                        . " SECAO = " . $cabec->secao . " "
+                        . " OS = " . $cabec->nroOSCabec . " "
                         . " AND "
-                        . " TALHAO = " . $cabec->talhao . " "
+                        . " FRENTE = " . $cabec->codFrenteCabec . " "
                         . " AND "
-                        . " OS = " . $cabec->os . " "
+                        . " COLHEDORA = " . $cabec->nroColhedoraCabec . " "
                         . " AND "
-                        . " FRENTE = " . $cabec->frente . " "
-                        . " AND "
-                        . " COLHEDORA = " . $cabec->colhedora . " "
-                        . " AND "
-                        . " OPERADOR = " . $cabec->operador . " ";
-
+                        . " OPERADOR = " . $cabec->matricOperadorCabec . " ";
+        
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
@@ -61,9 +63,9 @@ class CabecPerdaDAO extends Conn {
     public function insCabec($cabec) {
 
         $select = " SELECT "
-                    . " MAX(ID) AS QTDE "
+                        . " MAX(ID) AS QTDE "
                     . " FROM "
-                    . " APONTAPERDACABECALHO ";
+                        . " APONTAPERDACABECALHO ";
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
@@ -76,10 +78,10 @@ class CabecPerdaDAO extends Conn {
             $qtdeCab = $qtdeCab + 1;
         }
 
-        if ($cabec->tipo == 1) {
-            $cabec->tipo = 5;
-        } else if ($cabec->tipo == 2) {
-            $cabec->tipo = 6;
+        if ($cabec->tipoColheitaCabec == 1) {
+            $cabec->tipoColheitaCabec = 5;
+        } else {
+            $cabec->tipoColheitaCabec = 6;
         }
         
         $sql = "INSERT INTO APONTAPERDACABECALHO ( "
@@ -100,19 +102,19 @@ class CabecPerdaDAO extends Conn {
                 . " , STATUS "
                 . " ) VALUES ( "
                 . " " . $qtdeCab . " "
-                . " , " . $cabec->tipo . " "
-                . " , " . $cabec->auditor1 . " "
-                . " , " . $cabec->auditor2 . " "
-                . " , " . $cabec->auditor3 . " "
-                . " , TO_DATE('" . $cabec->data . "','DD/MM/YYYY') "
-                . " , TO_DATE('" . $cabec->dhEnvio . "','DD/MM/YYYY HH24:MI') "
-                . " , " . $cabec->turno . " "
-                . " , " . $cabec->secao . " "
-                . " , " . $cabec->talhao . " "
-                . " , " . $cabec->os . " "
-                . " , " . $cabec->frente . " "
-                . " , " . $cabec->colhedora . " "
-                . " , " . $cabec->operador . " "
+                . " , " . $cabec->tipoColheitaCabec . " "
+                . " , " . $cabec->matricAuditor1Cabec . " "
+                . " , " . $cabec->matricAuditor2Cabec . " "
+                . " , " . $cabec->matricAuditor3Cabec . " "
+                . " , TO_DATE('" . $cabec->dthrCabec . "','DD/MM/YYYY') "
+                . " , SYSDATE "
+                . " , " . $cabec->nroTurnoCabec . " "
+                . " , " . $cabec->codSecaoCabec . " "
+                . " , " . $cabec->nroTalhaoCabec . " "
+                . " , " . $cabec->nroOSCabec . " "
+                . " , " . $cabec->codFrenteCabec . " "
+                . " , " . $cabec->nroColhedoraCabec . " "
+                . " , " . $cabec->matricOperadorCabec . " "
                 . " , 0) ";
 
         $this->Create = $this->Conn->prepare($sql);

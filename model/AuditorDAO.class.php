@@ -7,13 +7,13 @@
  */
 require_once ('../dbutil/Conn.class.php');
 /**
- * Description of OSDAO
+ * Description of Auditor
  *
  * @author anderson
  */
-class OSDAO extends Conn {
+class AuditorDAO extends Conn {
     //put your code here
-    
+
     /** @var PDOStatement */
     private $Read;
 
@@ -22,10 +22,13 @@ class OSDAO extends Conn {
 
     public function dados() {
 
-        $select = " SELECT DISTINCT "
-                . " NRO_OS AS \"nroOS\" "
-                . " FROM "
-                . " INTERFACE.V_OS_AGRICOLA_MANUAL ";
+        $select = " SELECT "
+                        . " CODIGO AS \"matricAuditor\" "
+                    . " FROM "
+                        . " INTERFACE.APONTAPERDAAUDITOR "
+                    . " ORDER BY "
+                        . " CODIGO "
+                    . " ASC ";
 
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
@@ -34,7 +37,6 @@ class OSDAO extends Conn {
         $result = $this->Read->fetchAll();
 
         return $result;
-        
     }
-    
+
 }
