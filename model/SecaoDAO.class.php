@@ -10,7 +10,7 @@ require_once('../dbutil/OCI.class.php');
  *
  * @author anderson
  */
-class TalhaoDAO extends OCI
+class SecaoDAO extends OCI
 {
 
     private $Conn;
@@ -19,11 +19,10 @@ class TalhaoDAO extends OCI
     {
 
         $select = " SELECT DISTINCT "
-            . " TALHAO.TALHAO_ID AS \"idPlot\" "
-            . " , TALHAO.PROPRAGR_ID AS \"idSection\" "
-            . " , TALHAO.NRO AS \"nroPlot\" "
+            . " NVL(PROPRAGR_ID, 0) AS \"idSection\" "
+            . " , NVL(CD, 0) AS \"codSection\" "
             . " FROM "
-            . " USINAS.V_INFEST_TALHAO TALHAO ";
+            . " USINAS.V_INFEST_PROPRAGR ";
 
         $this->Conn = parent::getConn();
         $statement = oci_parse($this->Conn, $select);

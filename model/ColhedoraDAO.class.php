@@ -5,42 +5,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once ('../dbutil/Conn.class.php');
+require_once('../dbutil/OCI.class.php');
 /**
  * Description of Colhedora
  *
  * @author anderson
  */
-class ColhedoraDAO extends Conn {
-    //put your code here
-    
-    /** @var PDOStatement */
-    private $Read;
+class ColhedoraDAO extends OCI
+{
 
-    /** @var PDO */
-    private $Conn;
+        private $Conn;
 
-    public function dados() {
+        public function dados()
+        {
 
-        $select = " SELECT "
-                            . " NRO AS \"nroColhedora\" "
-                    . " FROM "
-                            . " USINAS.V_INTEGRA_EQUIPAMENTO "
-                    . " WHERE "
-                            . " TIPO_CLASSE = 2  "
-                            . " AND  "
-                            . " NRO <> 9999999999 "
-                    . " ORDER BY "
-                            . " NRO "
-                    . " ASC ";
+                $select = " SELECT "
+                        . " NRO AS \"nroHarvester\" "
+                        . " FROM "
+                        . " USINAS.V_INTEGRA_EQUIPAMENTO "
+                        . " WHERE "
+                        . " TIPO_CLASSE = 2  "
+                        . " AND  "
+                        . " NRO <> 9999999999 "
+                        . " ORDER BY "
+                        . " NRO "
+                        . " ASC ";
 
-        $this->Conn = parent::getConn();
-        $this->Read = $this->Conn->prepare($select);
-        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
-        $this->Read->execute();
-        $result = $this->Read->fetchAll();
-
-        return $result;
-    }
-    
+                $this->Conn = parent::getConn();
+                $statement = oci_parse($this->Conn, $select);
+                oci_execute($statement);
+                oci_fetch_all($statement, $result, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+                oci_free_statement($statement);
+                return $result;
+        }
 }

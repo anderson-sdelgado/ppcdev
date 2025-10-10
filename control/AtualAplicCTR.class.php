@@ -11,67 +11,57 @@ require('../model/AtualAplicDAO.class.php');
  *
  * @author anderson
  */
-class AtualAplicCTR {
+class AtualAplicCTR
+{
     //put your code here
 
-    public function inserirDados($info){
-        
-        $jsonObj = json_decode($info['dado']);
-        $dados = $jsonObj->dados;
-
-        foreach ($dados as $d) {
-            $nroAparelho = $d->nroAparelho;
-            $versao = $d->versao;
-        }
-        
-        return $this->inserirAtualVersao($nroAparelho, $versao);
-        
+    public function inserirDados($body)
+    {
+        $config = json_decode($body);
+        return $this->inserirAtualVersao($config->number, $config->version);
     }
-    
-    public function inserirAtualVersao($nroAparelho, $versao) {
+
+    public function inserirAtualVersao($nroAparelho, $versao)
+    {
         $atualAplicDAO = new AtualAplicDAO();
         $v = $atualAplicDAO->verAtual($nroAparelho);
         if ($v == 0) {
             $atualAplicDAO->insAtual($nroAparelho, $versao);
-        } else {
-            $atualAplicDAO->updAtual($nroAparelho, $versao);
         }
-        $dado = array("nroAparelho" => $nroAparelho);
-        return json_encode(array("dados" =>array($dado)));
+        $data = $atualAplicDAO->dadoAtual($nroAparelho);
+        $atualAplicDAO->updAtual($nroAparelho, $versao, $data["idServ"]);
+        return $data;
     }
 
-    public function verifToken($info){
-        
+    public function verifToken($info)
+    {
+
         $jsonObj = json_decode($info['dado']);
         $dados = $jsonObj->dados;
 
         foreach ($dados as $d) {
             $token = $d->token;
         }
-        
+
         $atualAplicDAO = new AtualAplicDAO();
         $v = $atualAplicDAO->verToken($token);
-        
+
         if ($v > 0) {
             return true;
         } else {
             return false;
         }
-        
     }
-    
-    public function verToken($headers){
-        
-        $token = trim(substr($headers['Authorization'], 6));
+
+    public function verToken($token)
+    {
+        $token = trim(substr($token, 6));
         $atualAplicDAO = new AtualAplicDAO();
         $v = $atualAplicDAO->verToken($token);
-        
         if ($v > 0) {
             return true;
         } else {
             return false;
         }
-        
     }
-        
 }

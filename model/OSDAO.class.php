@@ -5,38 +5,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once ('../dbutil/Conn.class.php');
+require_once('../dbutil/OCI.class.php');
 /**
  * Description of OSDAO
  *
  * @author anderson
  */
-class OSDAO extends Conn {
-    //put your code here
-    
-    /** @var PDOStatement */
-    private $Read;
+class OSDAO extends OCI
+{
 
-    /** @var PDO */
     private $Conn;
 
-    public function dados() {
+    public function dados($nroOS)
+    {
 
         $select = " SELECT DISTINCT "
-                    . " NRO_OS AS \"nroOS\" "
-                    . " , NVL(PROPRAGR_ID, 0) AS \"idSecao\" "
-                    . " , NVL(PROPRAGR_CD, 0) AS \"codSecao\" "
-                . " FROM "
-                    . " USINAS.V_SIMOVA_OS_MANUAL ";
+            . " NRO_OS AS \"nroOS\" "
+            . " , NVL(PROPRAGR_ID, 0) AS \"idSection\" "
+            . " FROM "
+            . " USINAS.V_SIMOVA_OS_MANUAL "
+            . " WHERE "
+            . " NRO_OS = " . $nroOS;
 
         $this->Conn = parent::getConn();
-        $this->Read = $this->Conn->prepare($select);
-        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
-        $this->Read->execute();
-        $result = $this->Read->fetchAll();
-
-        return $result;
-        
+        $statement = oci_parse($this->Conn, $select);
+        oci_execute($statement);
+        $row = oci_fetch_assoc($statement);
+        oci_free_statement($statement);
+        return (object) $row;
     }
-    
 }

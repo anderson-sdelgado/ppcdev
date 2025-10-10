@@ -12,62 +12,43 @@ require_once('../model/AmostraPerdaDAO.class.php');
  *
  * @author anderson
  */
-class PerdaCTR {
-    //put your code here
-    
-    public function salvarDados($info) {
+class PerdaCTR
+{
 
-        $dados = $info['dado'];
+    public function salvarDados($body)
+    {
+        $cabecArray = json_decode($body);
+        return $this->salvarCabec($cabecArray);
+    }
 
-        $pos1 = strpos($dados, "_") + 1;
-
-        $cabec = substr($dados, 0, ($pos1 - 1));
-        $amostra = substr($dados, $pos1);
-
-        $jsonObjCabec = json_decode($cabec);
-        $jsonObjAmostra = json_decode($amostra);
-
-        $dadosCabec = $jsonObjCabec->cabec;
-        $dadosAmostra = $jsonObjAmostra->amostra;
-
-        $ret = $this->salvarCabec($dadosCabec, $dadosAmostra);
+    private function salvarCabec($cabecArray)
+    {
+        $cabecDAO = new CabecPerdaDAO();
+        $ret = array();
+        foreach ($cabecArray as $cab) {
+            $v = $cabecDAO->verifCabec($cab);
+            if ($v <= 0) {
+                $cabecDAO->insCabec($cab);
+            }
+            $idCabecBD = $cabecDAO->idCabec($cab);
+            $retAmostra = $this->salvarAmostra($idCabecBD, $cab->sampleList);
+            $ret[] = array_merge($retAmostra, ["id" => $cab->id, "idServ" => $idCabecBD]);
+        }
         return $ret;
     }
 
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private function salvarCabec($dadosCabec, $dadosAmostra) {
-        $cabecPerdaDAO = new CabecPerdaDAO();
-        $idCabecArray = array();
-        foreach ($dadosCabec as $cabec) {
-            if ($cabec->tipoColheitaCabec == 1) {
-                $cabec->tipoColheitaCabec = 5;
-            } else {
-                $cabec->tipoColheitaCabec = 6;
+    private function salvarAmostra($idCabecBD, $amostraList)
+    {
+        $amostraDAO = new AmostraPerdaDAO();
+        $retAmostraArray = array();
+        foreach ($amostraList as $amostra) {
+            $v = $amostraDAO->verifAmostra($idCabecBD, $amostra);
+            if ($v <= 0) {
+                $amostraDAO->insAmostra($idCabecBD, $amostra);
             }
-            $v = $cabecPerdaDAO->verifCabec($cabec);
-            if ($v == 0) {
-                $idCabec = $cabecPerdaDAO->insCabec($cabec);
-                $this->salvarAmostra($idCabec, $cabec->idCabec, $dadosAmostra);
-            }
-            $idCabecArray[] = array("idCabec" => $cabec->idCabec);
+            $idAmostraBD = $amostraDAO->idAmostra($idCabecBD, $amostra);
+            $retAmostraArray['sampleList'] = [array("id" => $amostra->id, "idServ" => $idAmostraBD)];
         }
-        $dadoCabec = array("cabec"=>$idCabecArray);
-        $retCabec = json_encode($dadoCabec);
-        return 'GRAVOU-ANALISE_' . $retCabec;
+        return $retAmostraArray;
     }
-
-    private function salvarAmostra($idCabecBD, $idCabecCel, $dadosAmostra) {
-        $amostraPerdaDAO = new AmostraPerdaDAO();
-        foreach ($dadosAmostra as $amostra) {
-            if ($idCabecCel == $amostra->idCabecAmostra) {
-                $v = $amostraPerdaDAO->verifAmostra($idCabecBD, $amostra);
-                if ($v == 0) {
-                    $amostraPerdaDAO->insAmostra($idCabecBD, $amostra);
-                }
-            }
-        }
-    }
-    
 }
